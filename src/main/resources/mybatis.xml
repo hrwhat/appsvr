@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+  <!--<properties resource="conf/sysconfig.properties"/>
+  <environments default="development">
+    <environment id="development">
+      <transactionManager type="JDBC"/>
+      <dataSource type="POOLED">
+        <property name="driver" value="${com.tydic.yxsvr.db.driver}"/>
+        <property name="url" value="${com.tydic.yxsvr.db.url}"/>
+        <property name="username" value="${com.tydic.yxsvr.db.username}"/>
+        <property name="password" value="${com.tydic.yxsvr.db.password}"/>
+      </dataSource>
+
+
+      &lt;!&ndash;<dataSource type="POOLED">
+      <property name="driver" value="com.mysql.jdbc.Driver" />
+      <property name="url" value="jdbc:mysql://localhost:3306/hlp?useUnicode=true&amp;characterEncoding=UTF-8&amp;zeroDateTimeBehavior=convertToNull" />
+      <property name="username" value="root" />
+      <property name="password" value="1234" />
+    </dataSource>&ndash;&gt;
+    </environment>
+
+    <environment id="production">
+      <transactionManager type="JDBC"/>
+      <dataSource type="JNDI">
+        <property name="data_source" value="java:comp/env/jdbc/rule" />
+      </dataSource>
+    </environment>
+  </environments>-->
+  <mappers>
+    <mapper resource="sql/mysql/pub.xml"/>
+  </mappers>
+</configuration>

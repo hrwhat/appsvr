@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ray.ppsvr.pub.dao.PubDAO">
+
+  <insert id="addSubcriber">
+      INSERT INTO TB_SMP_YX_SUBSCRIBER(SUBSCRIBER_ID,OPEN_ID,ACC_NBR)
+      VALUES (SEQ_SMP_YX_SUBSCRIBER.NEXTVAL,#{OPEN_ID},#{ACC_NBR})
+  </insert>
+    <update id="updateSubcriber">
+      UPDATE TB_SMP_YX_SUBSCRIBER
+         SET ACC_NBR = #{ACC_NBR}
+       WHERE OPEN_ID = #{OPEN_ID}
+    </update>
+    <update id="updateSysParam">
+      update tb_ecp_sys_param
+       set sys_value = #{sysValue}
+     where sys_name = #{sysName}
+    </update>
+
+  <delete id="deleteSubcriber">
+    DELETE FROM TB_SMP_YX_SUBSCRIBER WHERE OPEN_ID = #{OPEN_ID}
+  </delete>
+    <select id="queryMobileByOpenId" resultType="java.util.Map">
+      SELECT ACC_NBR,TO_CHAR(COUNT(1)) NUM FROM TB_SMP_YX_SUBSCRIBER WHERE  OPEN_ID = #{OPEN_ID} GROUP BY ACC_NBR
+    </select>
+    <select id="querySysParams" resultType="java.util.Map" >
+      SELECT * FROM TB_ECP_SYS_PARAM
+    </select>
+
+</mapper>
