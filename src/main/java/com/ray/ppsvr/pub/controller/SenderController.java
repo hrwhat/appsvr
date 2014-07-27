@@ -28,16 +28,17 @@ public class SenderController {
     @Resource
     private MessageSender messageSender;
 
-    @RequestMapping(value = "if",method = RequestMethod.POST)
-    public @ResponseBody Object send(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    @RequestMapping(value = "if")
+    public @ResponseBody Object send(HttpServletRequest request) throws IOException {
         Map<String, String> res = new HashMap<String, String>();
         String data = RequestUtil.getPostData(request);
         if (data == null || "".equals(data.trim())){
             res.put("resCode", "1");
-            res.put("msg", "请求的数据为空");
+            res.put("msg", "请求的报文为空");
         } else{
             List<Map<String,Object>> list = JsonUtil.parseList(data);
-
+            messageSender.processMessage(list);
+            res.put("resCode", "0");
         }
 
         return res;

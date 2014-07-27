@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
@@ -32,11 +33,10 @@ public class PubController {
     PubService pubService;
 
     @RequestMapping("svc")
-    public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public @ResponseBody Object service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         logger.debug("pubService: " + pubService.getValidate());
         if("1".equals(pubService.getValidate())){  //验证开发者模式
-            this.validate(request, response);
-            return;
+            return this.validate(request, response);
         }
 
         InputStream is = request.getInputStream();
@@ -80,7 +80,7 @@ public class PubController {
         }
 
         if(!message.equals("")) {
-            String textXml = "<xml>\n" +
+            return  "<xml>\n" +
                     "        <ToUserName><![CDATA[" + fromUser + "]]></ToUserName>\n" +
                     "        <FromUserName><![CDATA[" + toUser + "]]></FromUserName>\n" +
                     "        <CreateTime>" + System.currentTimeMillis() + "</CreateTime>\n" +
@@ -88,8 +88,9 @@ public class PubController {
                     "        <Content><![CDATA[" + message + "]]></Content>\n" +
                     "        </xml>";
 
-            write(response, textXml);
+//            write(response, textXml);
         }
+        return "";
     }
 
 
@@ -102,7 +103,7 @@ public class PubController {
         pw.close();
     }
 
-    private boolean validate(HttpServletRequest request, HttpServletResponse response) throws IOException{
+    private String validate(HttpServletRequest request, HttpServletResponse response) throws IOException{
         boolean valid = false;
         String signature = request.getParameter("signature");
         String timestamp = request.getParameter("timestamp");
@@ -136,13 +137,14 @@ public class PubController {
         // 3. 开发者获得加密后的字符串可与signature对比，标识该请求来源于易信
         if (codedString.equals(signature)) {
             logger.info("verify success");
-            write(response, echostr);
-            valid = true;
+//            write(response, echostr);
+            return echostr;
 //            return;
         } else {
             logger.warn("Check error.");
-            write(response, "Check error.");
+//            write(response, "Check error.");
+            return "Check error.";
         }
-        return valid;
+//        return valid;
     }
 }

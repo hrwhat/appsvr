@@ -20,7 +20,7 @@ import java.util.Map;
 /**
  * User: Ray
  * Date: 14-5-19
- * Time: ÏÂÎç5:09
+ * Time: ä¸‹åˆ5:09
  */
 @Service
 public class MessageSenderImpl implements MessageSender {
@@ -38,9 +38,15 @@ public class MessageSenderImpl implements MessageSender {
             TextMessage tm;
             for(Map<String, Object> msg:list){
                 tm = new TextMessage();
-                tm.setTouser(getOpenId(msg.get("uid").toString()));
-                tm.setContent(getContent(msg.get("act").toString()));
-                send(tm);
+                String openId = getOpenId(msg.get("uid").toString());
+                if(openId == null||"".equals(openId.trim())){
+                    //è¿˜æ˜¯è¦å†™æ¶ˆæ¯è¡¨
+                }else{
+                    tm.setTouser(openId);
+                    tm.setContent(getContent(msg.get("act").toString()));
+                    send(tm);
+                }
+
             }
         }
         return true;
@@ -55,7 +61,7 @@ public class MessageSenderImpl implements MessageSender {
         if (res != null) {
             Map<String, Object> map = JsonUtil.parseMap(res);
             String errcode = String.valueOf(map.get("errcode"));
-            if ("40014".equals(errcode)) {  //²»ºÏ·¨µÄaccess_token ,ÔÙÈ¡Ò»´Î
+            if ("40014".equals(errcode)) {  //ä¸åˆæ³•çš„access_token ,å†å–ä¸€æ¬¡
                 accessToken = accessTokenService.getAccessToken(true);
                 res = HttpUtil.post(url.replace("ACCESS_TOKEN", accessToken), message.toString());
 
@@ -67,7 +73,7 @@ public class MessageSenderImpl implements MessageSender {
                     } else {
                         message.setErrcode(errcode);
                         message.setErrmsg(String.valueOf(map.get("errmsg")));
-                        throw new RuntimeException("µ÷ÓÃµã¶Ôµã½Ó¿ÚÊ§°Ü£º" + map.get("errcode"));
+                        throw new RuntimeException("è°ƒç”¨ç‚¹å¯¹ç‚¹æ¥å£å¤±è´¥ï¼š" + map.get("errcode"));
                     }
                 }
             } else if ("0".equals(errcode)) {
@@ -75,7 +81,7 @@ public class MessageSenderImpl implements MessageSender {
             } else {
                 message.setErrcode(errcode);
                 message.setErrmsg(String.valueOf(map.get("errmsg")));
-                throw new RuntimeException("µ÷ÓÃµã¶Ôµã½Ó¿ÚÊ§°Ü£º" + map.get("errcode") + message.getErrmsg());
+                throw new RuntimeException("è°ƒç”¨ç‚¹å¯¹ç‚¹æ¥å£å¤±è´¥ï¼š" + map.get("errcode") + message.getErrmsg());
             }
 
         }
@@ -86,10 +92,15 @@ public class MessageSenderImpl implements MessageSender {
     private String getOpenId(String studentNo){
         Map<String, Map<String,String >> studentsMap = pubDAO.queryStudentOpenId();
         Map<String,String> student = studentsMap.get(studentNo);
-        return student.get("OPEN_ID");
+        return student==null?null:student.get("OPEN_ID");
     }
 
     private  String getContent(String act){
         return SysParameter.getActInfo(act);
+    }
+
+
+    private void logMsg(){
+
     }
 }

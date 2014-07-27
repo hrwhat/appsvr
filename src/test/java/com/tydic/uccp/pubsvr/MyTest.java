@@ -11,7 +11,7 @@ import java.io.IOException;
  * Time: 下午2:51
  */
 public class MyTest {
-    String url = "http://127.0.0.1:80/yx?signature=&timestamp=&nonce=&echostr=echostr";
+    String url = "http://127.0.0.1:8081/svc?signature=&timestamp=&nonce=&echostr=echostr";
 
     @Test
     public void main() throws IOException{
@@ -75,6 +75,23 @@ public class MyTest {
                 " <MsgId>1234567890123456</MsgId>\n" +
                 " </xml>";
 
+        long startTime = System.currentTimeMillis();
+        for (int i = 0; i < 1; i++) {
+            System.out.println(i);
+            try {
+                HttpUtil.post(url, data.replace("OPEN_ID", "open_id"+i));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        System.out.println("last time = " +(System.currentTimeMillis() - startTime));
+    }
+
+
+    @Test
+    public void send(){
+        String data = "[{\"uid\":2001,\"act\":1}]";
+        url = "http://127.0.0.1:8081/if";
         long startTime = System.currentTimeMillis();
         for (int i = 0; i < 1; i++) {
             System.out.println(i);

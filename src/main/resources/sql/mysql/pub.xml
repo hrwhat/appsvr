@@ -35,7 +35,6 @@
   <select id="queryStudentOpenId" resultType="java.util.Map" >
     SELECT S.STUDENT_NO, S.OPEN_ID
       FROM TB_STUDENT S
-#      WHERE S.STUDENT_NO = #{STUDENT_NO}
   </select>
 
   <select id="queryBindByOpenId" resultType="java.util.Map" >
@@ -43,5 +42,11 @@
     FROM TB_STUDENT S
     WHERE S.OPEN_ID = #{OPEN_ID}
   </select>
+
+  <update id="updateSysParam">
+    update tb_sys_param
+    set sys_value = #{sysValue}
+    where sys_name = #{sysName}
+  </update>
 
 </mapper>

@@ -54,12 +54,12 @@ public class AccessTokenServiceImpl implements AccessTokenService {
         if(!forced) {
             if (ACCESS_TOKEN == null || "null".equals(ACCESS_TOKEN)) {     //为空时需取
                 //先从系统参数表里取
-                String accessToken = SysParameter.getYxAccessToken();
+                String accessToken = SysParameter.getWxAccessToken();
                 if(accessToken == null || accessToken.equals("")){
                     needRefresh = true;
                 }else{
-                    long refreshTime = SysParameter.getYxAccessTokenRefreshTime();
-                    long expireIn = SysParameter.getYxAccessTokenExpireIn();
+                    long refreshTime = SysParameter.getWxAccessTokenRefreshTime();
+                    long expireIn = SysParameter.getWxAccessTokenExpireIn();
                     if (System.currentTimeMillis() - refreshTime > expireIn) {    //超时了也要取
                         needRefresh = true;
                     }else{
@@ -98,37 +98,22 @@ public class AccessTokenServiceImpl implements AccessTokenService {
 
     private void updateSysParams() throws SQLException {
         Map<String, String> params = new HashMap<String, String>();
-        params.put("sysName", "YX_ACCESS_TOKEN");
+        params.put("sysName", "WX_ACCESS_TOKEN");
         params.put("sysValue", this.ACCESS_TOKEN);
         pubDAO.updateSysParam(params);
         params = new HashMap<String, String>();
-        params.put("sysName", "YX_ACCESS_TOKEN_REFRESH_TIME");
+        params.put("sysName", "WX_ACCESS_TOKEN_REFRESH_TIME");
         params.put("sysValue", String.valueOf(this.REFRESH_TIME));
         pubDAO.updateSysParam(params);
         params = new HashMap<String, String>();
-        params.put("sysName", "YX_ACCESS_TOKEN_EXPIRE_IN");
+        params.put("sysName", "WX_ACCESS_TOKEN_EXPIRE_IN");
         params.put("sysValue", String.valueOf(this.EXPIRE_IN));
         pubDAO.updateSysParam(params);
     }
-
-
 
 
     public String getAccessToken(){
         return getAccessToken(false);
     }
 
-
-
-    public void setAppid(String appid) {
-        this.appid = appid;
-    }
-
-    public void setAppsecret(String appsecret) {
-        this.appsecret = appsecret;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
 }
