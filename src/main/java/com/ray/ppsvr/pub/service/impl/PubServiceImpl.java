@@ -1,9 +1,6 @@
 package com.ray.ppsvr.pub.service.impl;
 
-import com.ray.ppsvr.HttpUtil;
-import com.ray.ppsvr.pub.JsonUtil;
 import com.ray.ppsvr.pub.dao.PubDAO;
-import com.ray.ppsvr.pub.service.AccessTokenService;
 import com.ray.ppsvr.pub.service.PubService;
 import org.dom4j.Element;
 import org.slf4j.Logger;
@@ -12,7 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,10 +25,6 @@ public class PubServiceImpl implements PubService {
     private static final String EVENT_CLICK = "CLICK";
     @Value("${com.ray.ppsvr.validate}")
     private String validate;
-
-    @Resource
-    private AccessTokenService accessTokenService;
-
 
     @Resource
     PubDAO pubDAO;
@@ -70,17 +62,25 @@ public class PubServiceImpl implements PubService {
             }
         }else if ("text".equals(msgType)){
             String content = root.element("Content").getText();
-            String prefix = content.substring(0,4).toUpperCase();
+            String prefix = content.substring(0, 4).toUpperCase();
             if("BDXH".equals(prefix)){
                 String studentNo = content.substring(4);
                 params.put("STUDENT_NO", studentNo);
-                Map<String, String> student = pubDAO.queryBindByOpenId(openId);
+                Map<String, String> student = pubDAO.queryStudentByNo(studentNo);
                 if(student == null){
                     pubDAO.addSubcriber(params);
+                    result = 3;
                 }else{
+                    String oldOpenId = student.get("OPEN_ID");
+                    if(oldOpenId == null || oldOpenId.equals("")){
+                        result = 3;
+                    }else if(!openId.equals(oldOpenId)){
+                        result = 4;
+                    }else{
+                        result = 1;
+                    }
                     pubDAO.updateSubcriber(params);
                 }
-                result = 5;
 
             } else{
                 result = -2;      //什么都不干
@@ -108,8 +108,7 @@ public class PubServiceImpl implements PubService {
             String accNbr = map.get("ACC_NBR");
             if (accNbr == null || "".equals(accNbr)) {    //已保存OPEN_ID，但没有手机号
                 result = 4;
-                //获取手机号，更新数据
-                accNbr = getAccNbrByOpenId(openId);
+
                 if (accNbr == null || accNbr.equals("")) {
                     result = 41;  //表示取手机号不成功
                 }
@@ -123,37 +122,6 @@ public class PubServiceImpl implements PubService {
     }
 
 
-    private String getAccNbrByOpenId(String openId) {
-        String accNbr = "";
-        String accessToken = accessTokenService.getAccessToken();
-        String url = "https://api.yixin.im/private/user/info?access_token=ACCESS_TOKEN&openid=" + openId;
-        try {
-            String res = HttpUtil.get(url.replace("ACCESS_TOKEN", accessToken));
-            if (res != null) {
-                Map<String, Object> map = JsonUtil.parseMap(res);
-                if (map.get("mobile") == null) {
-                    logger.error("根据OPEN_ID获取手机号失败：" + res);
-                    if("40014".equals(String.valueOf(map.get("errcode")))  ){  //不合法的access_token ,再取一次
-                        accessToken = accessTokenService.getAccessToken(true);
-                        res = HttpUtil.get(url.replace("ACCESS_TOKEN", accessToken));
-                        if (res != null) {
-                            map = JsonUtil.parseMap(res);
-                            if (map.get("mobile") == null) {
-                                logger.error("刷新ACCESS_TOKEN后根据OPEN_ID获取手机号失败：" + res);
-                            }else{
-                                accNbr = String.valueOf(map.get("mobile"));
-                            }
-                        }
-                    }
-                } else {
-                    accNbr = String.valueOf(map.get("mobile"));
-                }
-            }
-        } catch (IOException e) {
-            logger.error("根据OPEN_ID获取手机号失败：" , e);
-        }
-        return accNbr;
-    }
 
 
     public String getValidate() {

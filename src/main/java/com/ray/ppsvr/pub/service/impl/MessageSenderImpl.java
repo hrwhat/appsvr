@@ -1,19 +1,22 @@
 package com.ray.ppsvr.pub.service.impl;
 
 
-
 import com.ray.ppsvr.HttpUtil;
 import com.ray.ppsvr.pub.JsonUtil;
+import com.ray.ppsvr.pub.MessageStatus;
 import com.ray.ppsvr.pub.SysParameter;
 import com.ray.ppsvr.pub.dao.PubDAO;
 import com.ray.ppsvr.pub.message.BaseMessage;
 import com.ray.ppsvr.pub.message.TextMessage;
 import com.ray.ppsvr.pub.service.AccessTokenService;
 import com.ray.ppsvr.pub.service.MessageSender;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,83 +27,93 @@ import java.util.Map;
  */
 @Service
 public class MessageSenderImpl implements MessageSender {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Resource
-    private AccessTokenService accessTokenService ;
+    private AccessTokenService accessTokenService;
 
     @Resource
     private PubDAO pubDAO;
 
 
-
-    public boolean processMessage(List<Map<String,Object>> list) throws IOException {
-        if(list != null && list.size() > 0){
+    public boolean processMessage(List<Map<String, Object>> list) {
+        if (list != null && list.size() > 0) {
             TextMessage tm;
-            for(Map<String, Object> msg:list){
+            for (Map<String, Object> msg : list) {
                 tm = new TextMessage();
+                Map<String, Object> msgLog = new HashMap<String, Object>();
                 String openId = getOpenId(msg.get("uid").toString());
-                if(openId == null||"".equals(openId.trim())){
+
+                int status;
+                if (openId == null || "".equals(openId.trim())) {
                     //还是要写消息表
-                }else{
+                    status = MessageStatus.NO_OPEN_ID.getIndex();
+                } else {
                     tm.setTouser(openId);
                     tm.setContent(getContent(msg.get("act").toString()));
-                    send(tm);
+                    status = (send(tm) ? MessageStatus.SENT : MessageStatus.SEND_ERROR).getIndex();
                 }
-
+                msgLog.put("TO_USER", msg.get("uid").toString());
+                msgLog.put("CONTENT", tm.getContent());
+                msgLog.put("ACT", msg.get("act"));
+                msgLog.put("MSG_TIME", msg.get("time"));
+                msgLog.put("STATUS", status);
+                pubDAO.addMsg(msgLog);
             }
         }
         return true;
     }
 
 
-    public boolean send(BaseMessage message) throws IOException {
+    public boolean send(BaseMessage message) {
         boolean success = false;
         String accessToken = accessTokenService.getAccessToken();
         String url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=ACCESS_TOKEN";
-        String res = HttpUtil.post(url.replace("ACCESS_TOKEN", accessToken), message.toString());
-        if (res != null) {
-            Map<String, Object> map = JsonUtil.parseMap(res);
-            String errcode = String.valueOf(map.get("errcode"));
-            if ("40014".equals(errcode)) {  //不合法的access_token ,再取一次
-                accessToken = accessTokenService.getAccessToken(true);
-                res = HttpUtil.post(url.replace("ACCESS_TOKEN", accessToken), message.toString());
+        try {
+            String res = HttpUtil.post(url.replace("ACCESS_TOKEN", accessToken), message.toString());
+            if (res != null) {
+                Map<String, Object> map = JsonUtil.parseMap(res);
+                String errcode = String.valueOf(map.get("errcode"));
+                if ("40014".equals(errcode)) {  //不合法的access_token ,再取一次
+                    accessToken = accessTokenService.getAccessToken(true);
+                    res = HttpUtil.post(url.replace("ACCESS_TOKEN", accessToken), message.toString());
 
-                if (res != null) {
-                    map = JsonUtil.parseMap(res);
-                    errcode = String.valueOf(map.get("errcode"));
-                    if ("0".equals(errcode)) {
-                        success = true;
-                    } else {
-                        message.setErrcode(errcode);
-                        message.setErrmsg(String.valueOf(map.get("errmsg")));
-                        throw new RuntimeException("调用点对点接口失败：" + map.get("errcode"));
+                    if (res != null) {
+                        map = JsonUtil.parseMap(res);
+                        errcode = String.valueOf(map.get("errcode"));
+                        if ("0".equals(errcode)) {
+                            success = true;
+                        } else {
+                            message.setErrcode(errcode);
+                            message.setErrmsg(String.valueOf(map.get("errmsg")));
+                            throw new RuntimeException("调用点对点接口失败：" + map.get("errcode"));
+                        }
                     }
+                } else if ("0".equals(errcode)) {
+                    success = true;
+                } else {
+                    message.setErrcode(errcode);
+                    message.setErrmsg(String.valueOf(map.get("errmsg")));
+                    throw new RuntimeException("调用点对点接口失败：" + map.get("errcode") + message.getErrmsg());
                 }
-            } else if ("0".equals(errcode)) {
-                success = true;
-            } else {
-                message.setErrcode(errcode);
-                message.setErrmsg(String.valueOf(map.get("errmsg")));
-                throw new RuntimeException("调用点对点接口失败：" + map.get("errcode") + message.getErrmsg());
-            }
 
+            }
+        } catch (IOException e) {
+            success = false;
+            logger.error("调用点对点接口失败", e);
         }
         return success;
     }
 
 
-    private String getOpenId(String studentNo){
-        Map<String, Map<String,String >> studentsMap = pubDAO.queryStudentOpenId();
-        Map<String,String> student = studentsMap.get(studentNo);
-        return student==null?null:student.get("OPEN_ID");
+    private String getOpenId(String studentNo) {
+        Map<String, Map<String, String>> studentsMap = pubDAO.queryStudentOpenId();
+        Map<String, String> student = studentsMap.get(studentNo);
+        return student == null ? null : student.get("OPEN_ID");
     }
 
-    private  String getContent(String act){
+    private String getContent(String act) {
         return SysParameter.getActInfo(act);
     }
 
-
-    private void logMsg(){
-
-    }
 }

@@ -68,12 +68,10 @@ public class PubController {
         switch (result){
             case -1 : message = "对不起，保存您的关注数据时出现了问题，请输入BDXH+学号来绑定学号！"; break; //保存关注信息失败
             case 0 : message = "欢迎关注！请输入BDXH+学号来绑定学号！"; break;        //成功
-            case 1 : message = "欢迎关注！请输入BDXH+学号来绑定学号！"; break;
+            case 1 : message = "您已经绑定此学号！"; break;
             case 2 : break; //2表示取消关注，没有消息
-            case 3 : message = "您还没有绑定学号，已重新绑定！"; break;
-            case 31 : message = "您还没有绑定学号，重新绑定时失败！"; break;
-            case 4 : message = "您还没有绑定学号，已重新绑定！"; break;
-            case 41 : message = "您还没有绑定手机，重新绑定时获取手机号失败！"; break;
+            case 3 : message = "绑定学号成功！"; break;
+            case 4 : message = "请注意此学号已经和另一个微信号绑定！现已重新绑定到本微信号！"; break;
             case 5 : message = "绑定学号成功！"; break;
             case 6 : message = "请输入BDXH+学号来绑定学号，绑定后可以收到该学号相关动态"; break;
             default:break;
@@ -134,7 +132,7 @@ public class PubController {
         mdSha1.update(sb.toString().getBytes());
         byte[] codedBytes = mdSha1.digest();
         String codedString = new BigInteger(1, codedBytes).toString(16);
-        // 3. 开发者获得加密后的字符串可与signature对比，标识该请求来源于易信
+        // 3. 开发者获得加密后的字符串可与signature对比，标识该请求来源于wx
         if (codedString.equals(signature)) {
             logger.info("verify success");
 //            write(response, echostr);

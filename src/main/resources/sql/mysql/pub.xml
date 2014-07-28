@@ -3,7 +3,7 @@
 <mapper namespace="com.ray.ppsvr.pub.dao.PubDAO">
   <cache/>
   <select id="querySysParams" resultType="java.util.Map" >
-    SELECT * FROM TB_SYS_PARAM
+    SELECT * FROM tb_sys_param
   </select>
   <insert id="addSubcriber">
       INSERT INTO tb_student(STUDENT_NO,OPEN_ID,CREATED_BY,CREATION_DATE)
@@ -22,24 +22,29 @@
 
   <delete id="updateSubcriber">
     UPDATE  tb_student
-    SET STUDENT_NO =#{STUDENT_NO},
+    SET OPEN_ID = #{OPEN_ID},
         LAST_UPDATE_DATE = NOW()
-    WHERE OPEN_ID = #{OPEN_ID}
+    WHERE STUDENT_NO =#{STUDENT_NO}
   </delete>
 
   <insert id="addMsg">
-    INSERT INTO TB_MSG(TO_USER,MSG_TIME,ACT,CONTENT,STATUS,CREATION_DATE)
+    INSERT INTO tb_msg(TO_USER,MSG_TIME,ACT,CONTENT,STATUS,CREATION_DATE)
         VALUES(#{TO_USER},#{MSG_TIME},#{ACT},#{CONTENT},#{STATUS},NOW())
   </insert>
 
+  <select id="queryStudentByNo" resultType="java.util.Map" >
+    SELECT S.STUDENT_NO, S.OPEN_ID
+      FROM tb_student S
+     WHERE S.STUDENT_NO = #{STUDENT_NO}
+  </select>
   <select id="queryStudentOpenId" resultType="java.util.Map" >
     SELECT S.STUDENT_NO, S.OPEN_ID
-      FROM TB_STUDENT S
+      FROM tb_student S
   </select>
 
   <select id="queryBindByOpenId" resultType="java.util.Map" >
     SELECT S.STUDENT_NO, S.OPEN_ID
-    FROM TB_STUDENT S
+    FROM tb_student S
     WHERE S.OPEN_ID = #{OPEN_ID}
   </select>
 

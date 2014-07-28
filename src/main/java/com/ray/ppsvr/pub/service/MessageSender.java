@@ -14,6 +14,6 @@ import java.util.Map;
  */
 public interface MessageSender {
 
-    boolean processMessage(List<Map<String,Object>> list) throws IOException;
-    boolean send(BaseMessage message) throws IOException;
+    boolean processMessage(List<Map<String,Object>> list);
+    boolean send(BaseMessage message);
 }

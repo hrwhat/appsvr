@@ -1,6 +1,7 @@
 package com.ray.ppsvr.pub.dao;
 
 import org.apache.ibatis.annotations.MapKey;
+import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
@@ -26,4 +27,8 @@ public interface PubDAO {
 
     @MapKey("STUDENT_NO")
     Map<String,Map<String,String>> queryStudentOpenId();
+
+    Map<String, String> queryStudentByNo(String studentNo);
+
+    void addMsg(Map<String,Object> params);
 }

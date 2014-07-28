@@ -28,7 +28,7 @@ public class SenderController {
     @Resource
     private MessageSender messageSender;
 
-    @RequestMapping(value = "if")
+    @RequestMapping(value = "if", method = RequestMethod.POST)
     public @ResponseBody Object send(HttpServletRequest request) throws IOException {
         Map<String, String> res = new HashMap<String, String>();
         String data = RequestUtil.getPostData(request);

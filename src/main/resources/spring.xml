@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+  <context:property-placeholder location="classpath:sysconfig.properties"/>
+  <context:component-scan base-package="com.ray">
+    <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+  </context:component-scan>
+
+  <bean id="jdbcDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    <property name="driverClassName" value="${com.ray.ppsvr.db.driver}"/>
+    <property name="url" value="${com.ray.ppsvr.db.url}"/>
+    <property name="username" value="${com.ray.ppsvr.db.username}"/>
+    <property name="password" value="${com.ray.ppsvr.db.password}"/>
+  </bean>
+
+  <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    <property name="dataSource" ref="jdbcDataSource"/>
+  </bean>
+  <tx:annotation-driven transaction-manager="transactionManager"/>
+
+  <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    <property name="dataSource" ref="jdbcDataSource" />
+    <property name="configLocation" value="classpath:mybatis.xml"/>
+  </bean>
+
+  <bean id="pubDAO" class="org.mybatis.spring.mapper.MapperFactoryBean">
+    <property name="mapperInterface" value="com.ray.ppsvr.pub.dao.PubDAO"/>
+    <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+  </bean>
+
+  <security:http auto-config='true'>
+    <security:intercept-url pattern="/if" access="ROLE_USER, ROLE_ADMIN"/>
+    <!--<security:intercept-url pattern="/logviewer.html" access="ROLE_USER, ROLE_ADMIN"/>-->
+    <!--<security:intercept-url pattern="/qr/**" access="ROLE_USER, ROLE_ADMIN"/>-->
+    <!-- security:intercept-url pattern="/sms/**" access="ROLE_USER, ROLE_ADMIN"/-->
+    <security:intercept-url pattern="/svc" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+    <security:http-basic />
+  </security:http>
+
+  <security:authentication-manager>
+    <security:authentication-provider>
+      <security:user-service>
+        <!--<security:user name="ray" password="ray" authorities="ROLE_USER" />-->
+        <security:user name="${com.ray.ppsvr.username}" password="${com.ray.ppsvr.password}" authorities="ROLE_USER, ROLE_ADMIN" />
+      </security:user-service>
+    </security:authentication-provider>
+  </security:authentication-manager>
+
+
+
+
+</beans>
