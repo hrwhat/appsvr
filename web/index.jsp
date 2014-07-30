@@ -6,10 +6,12 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
-  <head>
-    <title></title>
-  </head>
-  <body>
-        HELLO
-  </body>
+<head>
+    <title>Index</title>
+
+</head>
+<body>
+HELLO
+    <a href="${pageContext.request.contextPath}/student/query">students</a>
+</body>
 </html>

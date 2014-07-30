@@ -5,7 +5,7 @@
        xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
             http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
-  <context:property-placeholder location="classpath:sysconfig.properties"/>
+  <context:property-placeholder location="classpath:sysconfig2.properties"/>
   <context:component-scan base-package="com.ray">
     <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
   </context:component-scan>
@@ -29,6 +29,10 @@
 
   <bean id="pubDAO" class="org.mybatis.spring.mapper.MapperFactoryBean">
     <property name="mapperInterface" value="com.ray.ppsvr.pub.dao.PubDAO"/>
+    <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+  </bean>
+  <bean class="org.mybatis.spring.mapper.MapperFactoryBean">
+    <property name="mapperInterface" value="com.ray.ppsvr.web.dao.StudentDAO"/>
     <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
   </bean>
 

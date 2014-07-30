@@ -11,7 +11,8 @@ import java.io.IOException;
  * Time: 下午2:51
  */
 public class MyTest {
-    String url = "http://127.0.0.1:8081/svc?signature=&timestamp=&nonce=&echostr=echostr";
+    String ip = "http://hrwhatjava.sinaapp.com";
+    String url = ip +"/svc?signature=token&timestamp=&nonce=&echostr=echostr";
 
     @Test
     public void main() throws IOException{
@@ -27,7 +28,7 @@ public class MyTest {
                 " </xml>";
 
         long startTime = System.currentTimeMillis();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 1; i++) {
             System.out.println(i);
             try {
                 HttpUtil.post(url, data.replace("OPEN_ID", "open_id"+i));
@@ -66,20 +67,21 @@ public class MyTest {
 
     @Test
     public void bind(){
+        url = "http://127.0.0.1:8081/svc";
         String data = " <xml>\n" +
                 " <ToUserName><![CDATA[toUser]]></ToUserName>\n" +
-                " <FromUserName>ad7dedd31bcb7844</FromUserName> \n" +
+                " <FromUserName>o0SrMtzCAWz5n7OziXgMMi8NBWm0</FromUserName> \n" +
                 " <CreateTime>1348831860</CreateTime>\n" +
                 " <MsgType><![CDATA[text]]></MsgType>\n" +
-                " <Content><![CDATA[BDXH2001]]></Content>\n" +
+                " <Content><![CDATA[BDXH$XH$]]></Content>\n" +
                 " <MsgId>1234567890123456</MsgId>\n" +
                 " </xml>";
 
         long startTime = System.currentTimeMillis();
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 20; i++) {
             System.out.println(i);
             try {
-                HttpUtil.post(url, data.replace("OPEN_ID", "open_id"+i));
+                HttpUtil.post(url, data.replace("OPEN_ID", "open_id"+i).replace("$XH$",i+""));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -90,13 +92,14 @@ public class MyTest {
 
     @Test
     public void send(){
-        String data = "[{\"uid\":2001,\"act\":1}]";
+        String data = "[{\"uid\":2001,\"act\":1,\"time\":\"2014-07-28 17:17:17\"}]";
         url = "http://127.0.0.1:8081/if";
+//        url = "http://hrwhatjava.sinaapp.com/if";
         long startTime = System.currentTimeMillis();
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 10; i++) {
             System.out.println(i);
             try {
-                HttpUtil.post(url, data.replace("OPEN_ID", "open_id"+i));
+                HttpUtil.securityPost(url, data.replace("OPEN_ID", "open_id" + i), "ray", "123");
             } catch (IOException e) {
                 e.printStackTrace();
             }

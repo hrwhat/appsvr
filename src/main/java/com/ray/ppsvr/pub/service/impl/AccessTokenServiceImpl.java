@@ -41,6 +41,9 @@ public class AccessTokenServiceImpl implements AccessTokenService {
     @Resource
     private PubDAO pubDAO;
 
+    @Resource
+    private SysParameter sysParameter;
+
 
     /**
      * 获取访问凭证
@@ -54,12 +57,12 @@ public class AccessTokenServiceImpl implements AccessTokenService {
         if(!forced) {
             if (ACCESS_TOKEN == null || "null".equals(ACCESS_TOKEN)) {     //为空时需取
                 //先从系统参数表里取
-                String accessToken = SysParameter.getWxAccessToken();
+                String accessToken = sysParameter.getWxAccessToken();
                 if(accessToken == null || accessToken.equals("")){
                     needRefresh = true;
                 }else{
-                    long refreshTime = SysParameter.getWxAccessTokenRefreshTime();
-                    long expireIn = SysParameter.getWxAccessTokenExpireIn();
+                    long refreshTime = sysParameter.getWxAccessTokenRefreshTime();
+                    long expireIn = sysParameter.getWxAccessTokenExpireIn();
                     if (System.currentTimeMillis() - refreshTime > expireIn) {    //超时了也要取
                         needRefresh = true;
                     }else{

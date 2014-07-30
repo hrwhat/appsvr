@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ray.ppsvr.web.dao.StudentDAO">
+
+
+  <select id="countStudents" resultType="int">
+       select count(1) from tb_student
+  </select>
+
+  <select id="queryStudents" resultType="java.util.HashMap">
+      SELECT s.STUDENT_ID,s.STUDENT_NO,s.OPEN_ID,s.NAME,
+      date_format(s.CREATION_DATE,'%Y-%m-%d %H:%i:%s') AS CREATION_DATE,
+      date_format(s.LAST_UPDATE_DATE,'%Y-%m-%d %H:%i:%s') AS LAST_UPDATE_DATE
+    FROM tb_student s
+    limit #{start},#{size}
+  </select>
+
+</mapper>

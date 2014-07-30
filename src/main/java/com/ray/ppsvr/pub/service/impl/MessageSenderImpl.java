@@ -42,22 +42,31 @@ public class MessageSenderImpl implements MessageSender {
             for (Map<String, Object> msg : list) {
                 tm = new TextMessage();
                 Map<String, Object> msgLog = new HashMap<String, Object>();
-                String openId = getOpenId(msg.get("uid").toString());
+                Map<String, String> student = pubDAO.queryStudentByNo(msg.get("uid").toString());
+                String openId = student.get("OPEN_ID");
 
-                int status;
+                int status = 0;
+                String err = "";
                 if (openId == null || "".equals(openId.trim())) {
                     //还是要写消息表
                     status = MessageStatus.NO_OPEN_ID.getIndex();
                 } else {
                     tm.setTouser(openId);
-                    tm.setContent(getContent(msg.get("act").toString()));
-                    status = (send(tm) ? MessageStatus.SENT : MessageStatus.SEND_ERROR).getIndex();
+                    tm.setContent("家长，您好，学生" + student.get("NAME") +"于" + msg.get("time") + getContent(msg.get("act").toString()) + "，请知悉！" );
+                    try {
+                        status = (send(tm) ? MessageStatus.SENT : MessageStatus.SEND_ERROR).getIndex();
+                    } catch (Exception e) {
+                        logger.error("发送消息失败", e);
+                        status = 3;
+                        err = "发送消息失败:" + e.getMessage();
+                    }
                 }
                 msgLog.put("TO_USER", msg.get("uid").toString());
                 msgLog.put("CONTENT", tm.getContent());
                 msgLog.put("ACT", msg.get("act"));
                 msgLog.put("MSG_TIME", msg.get("time"));
                 msgLog.put("STATUS", status);
+                msgLog.put("ERR_MSG", err);
                 pubDAO.addMsg(msgLog);
             }
         }

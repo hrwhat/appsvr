@@ -28,12 +28,12 @@
   </delete>
 
   <insert id="addMsg">
-    INSERT INTO tb_msg(TO_USER,MSG_TIME,ACT,CONTENT,STATUS,CREATION_DATE)
-        VALUES(#{TO_USER},#{MSG_TIME},#{ACT},#{CONTENT},#{STATUS},NOW())
+    INSERT INTO tb_msg(TO_USER,MSG_TIME,ACT,CONTENT,STATUS,CREATION_DATE,ERR_MSG)
+        VALUES(#{TO_USER},#{MSG_TIME},#{ACT},#{CONTENT},#{STATUS},NOW(),#{ERR_MSG})
   </insert>
 
   <select id="queryStudentByNo" resultType="java.util.Map" >
-    SELECT S.STUDENT_NO, S.OPEN_ID
+    SELECT S.STUDENT_NO, S.OPEN_ID, S.NAME
       FROM tb_student S
      WHERE S.STUDENT_NO = #{STUDENT_NO}
   </select>
