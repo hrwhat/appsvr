@@ -1,4 +1,4 @@
-package com.tydic.uccp.pubsvr;
+package com.ray;
 
 import com.ray.ppsvr.HttpUtil;
 import org.junit.Test;
@@ -68,17 +68,19 @@ public class MyTest {
     @Test
     public void bind(){
         url = "http://127.0.0.1:8081/svc";
+        url = "http://hrwhatjava.sinaapp.com/svc";
+        url = "http://realidtech.sinaapp.com/svc";
         String data = " <xml>\n" +
                 " <ToUserName><![CDATA[toUser]]></ToUserName>\n" +
                 " <FromUserName>o0SrMtzCAWz5n7OziXgMMi8NBWm0</FromUserName> \n" +
                 " <CreateTime>1348831860</CreateTime>\n" +
                 " <MsgType><![CDATA[text]]></MsgType>\n" +
-                " <Content><![CDATA[BDXH$XH$]]></Content>\n" +
+                " <Content><![CDATA[BDXH2001]]></Content>\n" +
                 " <MsgId>1234567890123456</MsgId>\n" +
                 " </xml>";
 
         long startTime = System.currentTimeMillis();
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 1; i++) {
             System.out.println(i);
             try {
                 HttpUtil.post(url, data.replace("OPEN_ID", "open_id"+i).replace("$XH$",i+""));
@@ -94,12 +96,14 @@ public class MyTest {
     public void send(){
         String data = "[{\"uid\":2001,\"act\":1,\"time\":\"2014-07-28 17:17:17\"}]";
         url = "http://127.0.0.1:8081/if";
-//        url = "http://hrwhatjava.sinaapp.com/if";
+        url = "http://hrwhatjava.sinaapp.com/if";
+        url = "http://realidtech.sinaapp.com/if";
         long startTime = System.currentTimeMillis();
         for (int i = 0; i < 10; i++) {
             System.out.println(i);
             try {
-                HttpUtil.securityPost(url, data.replace("OPEN_ID", "open_id" + i), "ray", "123");
+//                HttpUtil.securityPost(url, data.replace("OPEN_ID", "open_id" + i), "ray", "123");
+                HttpUtil.securityPost(url, data.replace("OPEN_ID", "open_id" + i), "realid", "31415926");
             } catch (IOException e) {
                 e.printStackTrace();
             }
