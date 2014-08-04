@@ -12,4 +12,9 @@ public interface StudentDAO {
 
     int countStudents();
     List queryStudents(Map<String,Object> params);
+
+    int update(Map<String,Object> params);
+    void addStudent(Map<String,Object> params);
+
+    void delStudent(String ids);
 }

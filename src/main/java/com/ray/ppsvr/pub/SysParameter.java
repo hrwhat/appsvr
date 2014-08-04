@@ -16,9 +16,7 @@ public class SysParameter {
 
 	@SuppressWarnings("unchecked")
 	private static Map<String,Map<String,String>> sysParamMap;
-    
 
-	// private static List<BusinessEntity> businessList;
 
      @PostConstruct
 	 public void init()  {
@@ -32,42 +30,11 @@ public class SysParameter {
 		sysParamMap = pubDAO.querySysParams();
 	}
 
-	
-
-	public static String getNodeId() {
-		return "01";
-	}
-
-	public static String getModuleId() {
-		return "01";
-	}
-
-	public static String getChannelType() {
-		return "01";
-	}
-
-
 
     public static String getActInfo(String act){
         Map rowMap = (Map) sysParamMap.get("ACT_" + act);
         return String.valueOf( rowMap.get("SYS_VALUE"));
     }
-
-
-
-
-
-
-	public static String getSmsReportParam() {
-		
-		Map rowMap = (Map) sysParamMap.get("SMP_REPORT_PARAM");
-		if (rowMap == null) {
-			return "50000,600000";
-		}
-		String value = (String) rowMap.get("SYS_VALUE");
-		return value;
-	}
-
 
 
 	public static String getAreaCode() {

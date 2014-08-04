@@ -1,14 +1,13 @@
 package com.ray.ppsvr.pub.controller.web;
 
 import com.ray.ppsvr.web.dao.StudentDAO;
+import com.ray.ppsvr.web.service.StudentService;
+import com.ray.ppsvr.web.vo.ActVO;
 import com.ray.ppsvr.web.vo.Column;
 import com.ray.ppsvr.web.vo.DataTableRequest;
 import com.ray.ppsvr.web.vo.DataTableVO;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +27,9 @@ public class StudentController {
     @Resource
     private StudentDAO studentDAO;
 
+    @Resource
+    private StudentService studentService;
+
     @RequestMapping("query")
     public @ResponseBody Object query(HttpServletRequest request){
         int start = Integer.parseInt(request.getParameter("start"));
@@ -44,5 +46,11 @@ public class StudentController {
         vo.setRecordsFiltered(total);
         vo.setData(list);
         return vo;
+    }
+
+    @RequestMapping(value = "edit")
+    public @ResponseBody Object edit(ActVO actVO){
+
+        return studentService.edit(actVO);
     }
 }

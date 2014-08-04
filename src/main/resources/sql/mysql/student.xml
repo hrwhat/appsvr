@@ -15,4 +15,19 @@
     limit #{start},#{size}
   </select>
 
+  <update id="update">
+    update tb_student set NAME = #{NAME},STUDENT_NO = #{STUDENT_NO},OPEN_ID = #{OPEN_ID},LAST_UPDATE_DATE = NOW()
+    where STUDENT_ID = #{STUDENT_ID}
+  </update>
+
+
+  <insert id="addStudent">
+    INSERT INTO tb_student(NAME,STUDENT_NO,OPEN_ID,CREATED_BY,CREATION_DATE)
+    VALUES (#{NAME},#{STUDENT_NO},#{OPEN_ID},#{CREATED_BY},NOW())
+  </insert>
+
+  <delete id="delStudent">
+    delete from tb_student where STUDENT_ID in (#{0})
+  </delete>
+
 </mapper>
