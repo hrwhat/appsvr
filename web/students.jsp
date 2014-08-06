@@ -7,7 +7,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Index</title>
+    <title>学生信息</title>
     <!-- DataTables CSS -->
     <link rel="stylesheet" type="text/css"
           href="${pageContext.request.contextPath}/resources/datatables/css/jquery.dataTables.css">

@@ -20,11 +20,11 @@ public class StudentServiceImpl implements StudentService {
     private StudentDAO studentDAO;
 
     public Map edit(ActVO actVO) {
-        Map resMap = new HashMap();
+        Map<String, Object> resMap = new HashMap<String, Object>();
         System.out.println("actVO = " + 1);
         if ("edit".equals(actVO.getAction())) {
             studentDAO.update(actVO.getData());
-            Map rowMap = new HashMap();
+            Map<String, Object> rowMap = new HashMap<String, Object>();
             rowMap.putAll(actVO.getData());
             rowMap.put("DT_RowId", actVO.getId());
             resMap.put("row", rowMap);

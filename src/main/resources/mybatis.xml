@@ -33,5 +33,6 @@
   <mappers>
     <mapper resource="sql/mysql/pub.xml"/>
     <mapper resource="sql/mysql/student.xml"/>
+    <mapper resource="sql/mysql/msg.xml"/>
   </mappers>
 </configuration>

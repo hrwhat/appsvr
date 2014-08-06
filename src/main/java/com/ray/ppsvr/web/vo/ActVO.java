@@ -12,7 +12,7 @@ public class ActVO {
     private String action;
     private String id;
     private String ids;
-    private Map data;
+    private Map<String, Object> data;
 
     public String getIds() {
         return ids;
@@ -38,11 +38,11 @@ public class ActVO {
         this.id = id;
     }
 
-    public Map getData() {
+    public Map<String, Object> getData() {
         return data;
     }
 
-    public void setData(Map data) {
+    public void setData(Map<String, Object> data) {
         this.data = data;
     }
 }

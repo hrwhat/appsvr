@@ -66,14 +66,14 @@ public class PubController {
         }
         String message = "";
         switch (result){
-            case -1 : message = "对不起，保存您的关注数据时出现了问题，请输入BDXH+学号来绑定学号！"; break; //保存关注信息失败
-            case 0 : message = "欢迎关注！请输入BDXH+学号来绑定学号！"; break;        //成功
+            case -1 : message = "对不起，保存您的关注数据时出现了问题，请输入BDXH+学号来绑定学号！。例：BDXH201408001"; break; //保存关注信息失败
+            case 0 : message = "欢迎关注！请输入BDXH+学号来绑定学号。例：BDXH201408001"; break;        //成功
             case 1 : message = "您已经绑定此学号！"; break;
             case 2 : break; //2表示取消关注，没有消息
             case 3 : message = "绑定学号成功！"; break;
             case 4 : message = "请注意此学号已经和另一个微信号绑定！现已重新绑定到本微信号！"; break;
             case 5 : message = "绑定学号成功！"; break;
-            case 6 : message = "请输入BDXH+学号来绑定学号，绑定后可以收到该学号相关动态"; break;
+            case 6 : message = "请输入BDXH+学号来绑定学号，绑定后可以收到该学号相关动态。例：BDXH201408001"; break;
             default:break;
         }
 

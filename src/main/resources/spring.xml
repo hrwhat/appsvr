@@ -35,6 +35,10 @@
     <property name="mapperInterface" value="com.ray.ppsvr.web.dao.StudentDAO"/>
     <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
   </bean>
+  <bean class="org.mybatis.spring.mapper.MapperFactoryBean">
+    <property name="mapperInterface" value="com.ray.ppsvr.web.dao.MsgDAO"/>
+    <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+  </bean>
 
   <security:http auto-config='true'>
     <security:intercept-url pattern="/if" access="ROLE_USER, ROLE_ADMIN"/>
