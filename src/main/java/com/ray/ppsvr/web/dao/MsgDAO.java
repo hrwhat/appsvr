@@ -10,7 +10,7 @@ import java.util.Map;
  */
 public interface MsgDAO {
 
-    long countMsgs();
+    long countMsgs(Map<String, Object> params);
     List queryMsgs(Map<String, Object> params);
 
 

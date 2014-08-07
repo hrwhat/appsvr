@@ -9,7 +9,7 @@
 <head>
     <title>Index</title>
 
-    <link rel="stylesheet" href="//jquery.com/jquery-wp-content/themes/jquery/css/base.css?v=1">
+    <link rel="stylesheet" href="resources/css/base.css">
     <style type="text/css">
         body {
             background: #0769AD;
@@ -18,29 +18,12 @@
     <script type="text/javascript" language="javascript">
 
         function iFrameHeight() {
-                alert(1)
             var ifm= document.getElementById("mainFrame");
-
             var bHeight = ifm.contentWindow.document.body.scrollHeight;
             var dHeight = ifm.contentWindow.document.documentElement.scrollHeight;
             alert("bHeight:" + bHeight + ", dHeight:" + dHeight);
+            ifm.height = Math.min(bHeight,dHeight) + 15;
 
-            var subWeb = document.frames ? document.frames["mainFrame"].document :
-
-                    ifm.contentDocument;
-
-
-            if (ifm.contentDocument && ifm.contentDocument.body.offsetHeight) {
-
-                ifm.height = ifm.contentDocument.body.offsetHeight;
-
-            } //ie
-
-            else if (ifm.Document && ifm.Document.body.scrollHeight) {
-
-                ifm.height = ifm.Document.body.scrollHeight;
-
-            }
         }
 
     </script>
@@ -68,7 +51,7 @@
 
 </div>
 <div class="constrain clearfix" style="padding: 0;background: #ffffee">
-<iframe id="mainFrame" name="mainFrame" src="" width="100%" height="550"></iframe>
+<iframe id="mainFrame" name="mainFrame" src="students.jsp" width="100%" scrolling="no"></iframe>
 </div>
 </body>
 </html>

@@ -69,15 +69,18 @@
     var editor;
     var table;
     $(document).ready(function () {
-//        $('#table_id').dataTable();
-
-
 
         table = $('#example').DataTable({
-            sort: false,
             "processing": true,
             "serverSide": true,
-            "ajax": "msg/query",
+            "ajax": {
+                url:"msg/query",
+                type:"POST",
+                contentType:"application/json",
+                data:function(d){
+                    return JSON.stringify(d)
+                }
+            },
             "columns": [
                 { "data": "MSG_ID", defaultContent: ""},
                 { "data": "TO_USER", defaultContent: "", "class": "center"},

@@ -10,7 +10,7 @@ import java.util.Map;
  */
 public interface StudentDAO {
 
-    int countStudents();
+    int countStudents(Map<String,Object> params);
     List queryStudents(Map<String,Object> params);
 
     int update(Map<String,Object> params);

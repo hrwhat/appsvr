@@ -1,12 +1,16 @@
 package com.ray.ppsvr.web.service.impl;
 
 import com.ray.ppsvr.web.dao.StudentDAO;
+import com.ray.ppsvr.web.service.BaseService;
 import com.ray.ppsvr.web.service.StudentService;
 import com.ray.ppsvr.web.vo.ActVO;
+import com.ray.ppsvr.web.vo.DataTableRequest;
+import com.ray.ppsvr.web.vo.DataTableVO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -15,9 +19,34 @@ import java.util.Map;
  * Time: 19:09
  */
 @Service
-public class StudentServiceImpl implements StudentService {
+public class StudentServiceImpl extends BaseService implements StudentService {
     @Resource
     private StudentDAO studentDAO;
+
+    @Override
+    public DataTableVO query(DataTableRequest dtr) {
+        DataTableVO vo = new DataTableVO();
+        Map<String, Object> params = prepareParams(dtr);
+        List list = queryStudents(params);
+        vo.setDraw(dtr.getDraw());
+        int total = countStudents(params);
+        vo.setRecordsTotal(total);
+        vo.setRecordsFiltered(total);
+        vo.setData(list);
+        return vo;
+    }
+
+    @Override
+    public int countStudents(Map<String, Object> params) {
+        return studentDAO.countStudents(params);
+    }
+
+    @Override
+    public List queryStudents(Map<String, Object> params) {
+
+        return studentDAO.queryStudents(params);
+    }
+
 
     public Map edit(ActVO actVO) {
         Map<String, Object> resMap = new HashMap<String, Object>();

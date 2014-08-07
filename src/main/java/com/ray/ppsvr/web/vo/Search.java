@@ -7,7 +7,7 @@ package com.ray.ppsvr.web.vo;
  */
 public class Search {
     private String value;
-    private String regex;
+    private boolean regex;
 
     public String getValue() {
         return value;
@@ -17,11 +17,11 @@ public class Search {
         this.value = value;
     }
 
-    public String getRegex() {
+    public boolean isRegex() {
         return regex;
     }
 
-    public void setRegex(String regex) {
+    public void setRegex(boolean regex) {
         this.regex = regex;
     }
 }

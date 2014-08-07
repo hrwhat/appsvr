@@ -13,9 +13,10 @@ import java.util.Map;
 public class DataTableRequest {
 
     private int draw;
-     private int start;
+    private int start;
     private int length;
     private List<Column> columns = new ArrayList<Column>();
+    private List<Order> order = new ArrayList<Order>();
     private Search search = new Search();
 
     public int getDraw() {
@@ -48,6 +49,14 @@ public class DataTableRequest {
 
     public void setColumns(List<Column> columns) {
         this.columns = columns;
+    }
+
+    public List<Order> getOrder() {
+        return order;
+    }
+
+    public void setOrder(List<Order> order) {
+        this.order = order;
     }
 
     public Search getSearch() {

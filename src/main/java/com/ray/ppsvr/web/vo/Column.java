@@ -11,8 +11,8 @@ public class Column implements Serializable {
 
     private String data;
     private String  name;
-    private String  searchable;
-    private String  orderable;
+    private boolean  searchable;
+    private boolean  orderable;
     private Search search;
 
     public String getData() {
@@ -31,19 +31,19 @@ public class Column implements Serializable {
         this.name = name;
     }
 
-    public String getSearchable() {
+    public boolean isSearchable() {
         return searchable;
     }
 
-    public void setSearchable(String searchable) {
+    public void setSearchable(boolean searchable) {
         this.searchable = searchable;
     }
 
-    public String getOrderable() {
+    public boolean isOrderable() {
         return orderable;
     }
 
-    public void setOrderable(String orderable) {
+    public void setOrderable(boolean orderable) {
         this.orderable = orderable;
     }
 

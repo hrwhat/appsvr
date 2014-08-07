@@ -7,6 +7,11 @@
     SELECT
       count(1)
     FROM tb_msg
+    <where>
+      <if test="TO_USER != ''">
+        TO_USER LIKE "%"#{TO_USER}"%"
+      </if>
+    </where>
   </select>
 
   <select id="queryMsgs" resultType="java.util.HashMap">
@@ -20,6 +25,14 @@
       date_format(s.CREATION_DATE, '%Y-%m-%d %H:%i:%s')    AS CREATION_DATE,
       date_format(s.LAST_UPDATE_DATE, '%Y-%m-%d %H:%i:%s') AS LAST_UPDATE_DATE
     FROM tb_msg s
+    <where>
+      <if test="TO_USER != ''">
+        s.TO_USER LIKE "%"#{TO_USER}"%"
+      </if>
+    </where>
+    <if test="ORDER_BY != null">
+      ${ORDER_BY}
+    </if>
     LIMIT #{start}, #{size}
   </select>
 

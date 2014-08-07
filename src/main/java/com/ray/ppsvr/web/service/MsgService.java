@@ -12,10 +12,9 @@ import java.util.Map;
  * Date: 2014/8/3
  * Time: 19:09
  */
-public interface StudentService {
+public interface MsgService {
 
     DataTableVO query(DataTableRequest dtr);
-    int countStudents(Map<String,Object> params);
-    List queryStudents(Map<String,Object> params);
-    Map edit(ActVO actVO);
+    long countMsgs(Map<String, Object> params);
+    List queryMsgs(Map<String, Object> params);
 }

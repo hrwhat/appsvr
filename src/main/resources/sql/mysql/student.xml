@@ -4,7 +4,18 @@
 
 
   <select id="countStudents" resultType="int">
-       select count(1) from tb_student
+       select count(1) from tb_student s
+    <where>
+      <if test="STUDENT_NO != ''">
+        s.STUDENT_NO LIKE "%"#{STUDENT_NO}"%"
+      </if>
+      <if test="NAME != ''">
+        OR   s.NAME LIKE "%"#{NAME}"%"
+      </if>
+      <if test="OPEN_ID != ''">
+        OR   s.OPEN_ID LIKE "%"#{OPEN_ID}"%"
+      </if>
+    </where>
   </select>
 
   <select id="queryStudents" resultType="java.util.HashMap">
@@ -12,6 +23,20 @@
       date_format(s.CREATION_DATE,'%Y-%m-%d %H:%i:%s') AS CREATION_DATE,
       date_format(s.LAST_UPDATE_DATE,'%Y-%m-%d %H:%i:%s') AS LAST_UPDATE_DATE
     FROM tb_student s
+    <where>
+      <if test="STUDENT_NO != ''">
+           s.STUDENT_NO LIKE "%"#{STUDENT_NO}"%"
+      </if>
+      <if test="NAME != ''">
+        OR   s.NAME LIKE "%"#{NAME}"%"
+      </if>
+      <if test="OPEN_ID != ''">
+        OR   s.OPEN_ID LIKE "%"#{OPEN_ID}"%"
+      </if>
+    </where>
+    <if test="ORDER_BY != null">
+       ${ORDER_BY}
+    </if>
     limit #{start},#{size}
   </select>
 
