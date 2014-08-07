@@ -68,17 +68,24 @@
 
 
         table = $('#example').DataTable({
-            dom: "Tfrtip",
-            sort: false,
+            dom: "Tlfrtip",
+//            sort: false,
             "processing": true,
             "serverSide": true,
-            "ajax": "student/query",
-            "columns": [
+            "ajax": {
+                url:"student/query",
+                type:"POST",
+                contentType:"application/json",
+                data:function(d){
+                    return JSON.stringify(d)
+                }
+            },
+            columns: [
                 { "data": "NAME", defaultContent: ""},
-                { "data": "STUDENT_NO", defaultContent: "", "class": "center", editor: "text"},
+                { "data": "STUDENT_NO", defaultContent: "", "class": "center"},
                 { "data": "OPEN_ID", defaultContent: "", "class": "center"},
-                { "data": "CREATION_DATE", defaultContent: "", "class": "center"},
-                { "data": "LAST_UPDATE_DATE", defaultContent: "", "class": "center"}
+                { "data": "CREATION_DATE", defaultContent: "", "class": "center",searchable:false},
+                { "data": "LAST_UPDATE_DATE", defaultContent: "", "class": "center",searchable:false}
             ],
             tableTools: {
                 sRowSelect: "os",
@@ -91,6 +98,8 @@
                 ]
             }, language: {
                 url: 'resources/datatables/json/dataTable.json'
+            },drawCallback:function(){
+                parent.iFrameHeight()
             }
         });
 
