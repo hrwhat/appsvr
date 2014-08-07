@@ -21,7 +21,7 @@
             var ifm= document.getElementById("mainFrame");
             var bHeight = ifm.contentWindow.document.body.scrollHeight;
             var dHeight = ifm.contentWindow.document.documentElement.scrollHeight;
-            alert("bHeight:" + bHeight + ", dHeight:" + dHeight);
+//            alert("bHeight:" + bHeight + ", dHeight:" + dHeight);
             ifm.height = Math.min(bHeight,dHeight) + 15;
 
         }
