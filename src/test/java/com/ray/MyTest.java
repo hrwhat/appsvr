@@ -96,14 +96,14 @@ public class MyTest {
     public void send(){
         String data = "[{\"uid\":2001,\"act\":1,\"time\":\"2014-07-28 17:17:17\"}]";
         url = "http://127.0.0.1:8081/if";
-        url = "http://hrwhatjava.sinaapp.com/if";
-        url = "http://realidtech.sinaapp.com/if";
+//        url = "http://hrwhatjava.sinaapp.com/if";
+//        url = "http://realidtech.sinaapp.com/if";
         long startTime = System.currentTimeMillis();
         for (int i = 0; i < 10; i++) {
             System.out.println(i);
             try {
-//                HttpUtil.securityPost(url, data.replace("OPEN_ID", "open_id" + i), "ray", "123");
-                HttpUtil.securityPost(url, data.replace("OPEN_ID", "open_id" + i), "realid", "31415926");
+                HttpUtil.securityPost(url, data.replace("OPEN_ID", "open_id" + i), "ray", "123");
+//                HttpUtil.securityPost(url, data.replace("OPEN_ID", "open_id" + i), "realid", "31415926");
             } catch (IOException e) {
                 e.printStackTrace();
             }
