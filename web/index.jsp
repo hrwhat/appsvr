@@ -30,7 +30,7 @@
 </head>
 <body>
 <div>
-    <nav id="main" class="constrain clearfix">
+    <div id="main" class="constrain clearfix">
         <div class="menu-top-container">
             <ul id="menu-top" class="menu">
 
@@ -47,7 +47,7 @@
                        placeholder="Search">
             </label>
         </form>--%>
-    </nav>
+    </div>
 
 </div>
 <div class="constrain clearfix" style="padding: 0;background: #ffffee">
