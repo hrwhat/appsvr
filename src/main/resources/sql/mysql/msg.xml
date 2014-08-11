@@ -21,7 +21,7 @@
       s.ACT,
       date_format(s.MSG_TIME, '%Y-%m-%d %H:%i:%s')         AS MSG_TIME,
       s.CONTENT,
-      S.STATUS,
+      s.STATUS,
       date_format(s.CREATION_DATE, '%Y-%m-%d %H:%i:%s')    AS CREATION_DATE,
       date_format(s.LAST_UPDATE_DATE, '%Y-%m-%d %H:%i:%s') AS LAST_UPDATE_DATE
     FROM tb_msg s
