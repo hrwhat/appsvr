@@ -43,6 +43,10 @@ public class MessageSenderImpl implements MessageSender {
                 tm = new TextMessage();
                 Map<String, Object> msgLog = new HashMap<String, Object>();
                 Map<String, String> student = pubDAO.queryStudentByNo(msg.get("uid").toString());
+                if(student == null){
+                    logger.warn("学号[" + msg.get("uid").toString() + "]不存在，被忽略");
+                    continue;
+                }
                 String openId = student.get("OPEN_ID");
 
                 int status = 0;
