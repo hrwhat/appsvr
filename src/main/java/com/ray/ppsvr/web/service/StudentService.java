@@ -18,4 +18,6 @@ public interface StudentService {
     int countStudents(Map<String,Object> params);
     List queryStudents(Map<String,Object> params);
     Map edit(ActVO actVO);
+
+    String save(Map<String,Object> param);
 }

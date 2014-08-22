@@ -41,7 +41,7 @@
   </select>
 
   <update id="update">
-    update tb_student set NAME = #{NAME},STUDENT_NO = #{STUDENT_NO},OPEN_ID = #{OPEN_ID},LAST_UPDATE_DATE = NOW()
+    update tb_student set NAME = #{NAME},STUDENT_NO = #{STUDENT_NO},LAST_UPDATE_DATE = NOW()
     where STUDENT_ID = #{STUDENT_ID}
   </update>
 

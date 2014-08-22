@@ -66,4 +66,14 @@ public class StudentServiceImpl extends BaseService implements StudentService {
 
         return resMap;
     }
+
+    @Override
+    public String save(Map<String,Object> param) {
+        if(param.get("STUDENT_ID").equals("")){
+            studentDAO.addStudent(param);
+        }else{
+            studentDAO.update(param);
+        }
+        return "1";
+    }
 }

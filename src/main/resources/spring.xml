@@ -44,8 +44,8 @@
     <security:intercept-url pattern="/if" access="ROLE_USER, ROLE_ADMIN"/>
     <!--<security:intercept-url pattern="/logviewer.html" access="ROLE_USER, ROLE_ADMIN"/>-->
     <!--<security:intercept-url pattern="/qr/**" access="ROLE_USER, ROLE_ADMIN"/>-->
-     <security:intercept-url pattern="/**" access="ROLE_USER, ROLE_ADMIN"/>
     <security:intercept-url pattern="/svc" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+    <security:intercept-url pattern="/**" access="ROLE_USER, ROLE_ADMIN"/>
     <security:http-basic />
   </security:http>
 

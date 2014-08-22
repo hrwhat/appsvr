@@ -13,8 +13,6 @@
           href="${pageContext.request.contextPath}/resources/datatables/css/jquery.dataTables.css">
     <link rel="stylesheet" type="text/css"
           href="${pageContext.request.contextPath}/resources/datatables/tableTools/css/dataTables.tableTools.css">
-    <link rel="stylesheet" type="text/css"
-          href="${pageContext.request.contextPath}/resources/datatables/editor/css/dataTables.editor.css">
 
     <!-- jQuery -->
     <script type="text/javascript" charset="utf8"
@@ -25,8 +23,7 @@
             src="${pageContext.request.contextPath}/resources/datatables/js/jquery.dataTables.js"></script>
     <script type="text/javascript" charset="utf8"
             src="${pageContext.request.contextPath}/resources/datatables/tableTools/js/dataTables.tableTools.js"></script>
-    <script type="text/javascript" charset="utf8"
-            src="${pageContext.request.contextPath}/resources/datatables/editor/js/dataTables.editor.js"></script>
+
     <style type="text/css">
         .center {
             text-align: center;
@@ -66,7 +63,6 @@
 
 <script>
 
-    var editor;
     var table;
     $(document).ready(function () {
 

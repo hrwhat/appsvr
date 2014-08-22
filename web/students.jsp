@@ -13,8 +13,7 @@
           href="${pageContext.request.contextPath}/resources/datatables/css/jquery.dataTables.css">
     <link rel="stylesheet" type="text/css"
           href="${pageContext.request.contextPath}/resources/datatables/tableTools/css/dataTables.tableTools.css">
-    <link rel="stylesheet" type="text/css"
-          href="${pageContext.request.contextPath}/resources/datatables/editor/css/dataTables.editor.css">
+
 
     <!-- jQuery -->
     <script type="text/javascript" charset="utf8"
@@ -25,8 +24,7 @@
             src="${pageContext.request.contextPath}/resources/datatables/js/jquery.dataTables.js"></script>
     <script type="text/javascript" charset="utf8"
             src="${pageContext.request.contextPath}/resources/datatables/tableTools/js/dataTables.tableTools.js"></script>
-    <script type="text/javascript" charset="utf8"
-            src="${pageContext.request.contextPath}/resources/datatables/editor/js/dataTables.editor.js"></script>
+
     <style type="text/css">
         .center {
             text-align: center;
@@ -64,8 +62,6 @@
     var table;
     $(document).ready(function () {
 //        $('#table_id').dataTable();
-        createEditor();
-
 
         table = $('#example').DataTable({
             dom: "Tlfrtip",
@@ -90,8 +86,12 @@
             tableTools: {
                 sRowSelect: "os",
                 aButtons: [
-                    { sExtends: "editor_create", editor: editor, sButtonText: "新增" },
-                    { sExtends: "editor_edit", editor: editor, sButtonText: "修改" },
+                    { sExtends: "text", sButtonText: "新增",fnClick:function(){
+                        edit(1)
+                    }},
+                    { sExtends: "text", sButtonText: "修改",fnClick:function(){
+                        edit(2)
+                    } },
                     { sExtends: "text", sButtonText: "删除", fnClick: function () {
                         remove()
                     } }
@@ -105,33 +105,25 @@
 
     });
 
-
-    function createEditor() {
-        editor = new $.fn.dataTable.Editor({
-            ajax: "student/edit",
-            table: "#example",
-            "idSrc": "STUDENT_ID",
-            fields: [
-                {
-                    label: "ID:",
-                    name: "STUDENT_ID",
-                    type: "readonly"
-                },
-                {
-                    label: "姓名:",
-                    name: "NAME"
-                },
-                {
-                    label: "学号 :",
-                    name: "STUDENT_NO"
-                },
-                {
-                    label: "OPEN_ID:",
-                    name: "OPEN_ID"
-                }
-            ]
-        });
+    function edit(t){
+        var url = "${pageContext.request.contextPath}/studentEdit.jsp";
+        if(t == 2){
+            var rows = table.rows('.selected');
+            var data = rows.data();
+            if (data.length > 1) {
+                alert("只能选择一条数据。");
+                return;
+            } else {
+                url += "?studentNo="+data[0].STUDENT_NO + "&studentName=" + encodeURIComponent(data[0].NAME) + "&studentId=" + data[0].STUDENT_ID;
+            }
+        }
+        var res = window.showModalDialog(url,"","dialogHeight=130px;dialogWidth=400px");
+        if(res == 1){
+            window.location.reload();
+        }
     }
+
+
     function remove() {
 
         var rows = table.rows('.selected');
@@ -149,8 +141,6 @@
                 })
             }
         }
-
-
     }
 </script>
 </html>
