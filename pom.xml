@@ -24,7 +24,7 @@
             <!--<webXml>/web/WEB-INF/web.xml</webXml>-->
             <archive>
               <manifestEntries>
-                 <Build-Version>1.0.1</Build-Version>
+                 <Build-Version>1.0.2</Build-Version>
                  <Build-Date>${maven.build.timestamp}</Build-Date>
               </manifestEntries>
             </archive>

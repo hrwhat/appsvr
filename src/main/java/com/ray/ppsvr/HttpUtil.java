@@ -11,6 +11,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +28,8 @@ import java.util.Set;
 public class HttpUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(HttpUtil.class);
-    static DefaultHttpClient client = new DefaultHttpClient();
+    //使用ThreadSafeClientConnManager 解决Invalid use of SingleClientConnManager: connection still allocated
+    static DefaultHttpClient client = new DefaultHttpClient(new ThreadSafeClientConnManager());
 
 
     public static String post(String url, String data) throws IOException {
@@ -43,6 +45,7 @@ public class HttpUtil {
             //打印响应内容
             logger.debug("response:" + res);
         }
+        post.abort();
         return res;
     }
 
@@ -68,6 +71,7 @@ public class HttpUtil {
 
     public static String get(String url) throws IOException {
         HttpGet get = new HttpGet(url);
+        logger.info("获取ACCESS_TOKEN");
         HttpResponse response = client.execute(get);
         HttpEntity httpEntity = response.getEntity();
         String res = "";
@@ -76,6 +80,7 @@ public class HttpUtil {
             //打印响应内容
             logger.debug("response:" + res);
         }
+        get.abort();
         return res;
     }
 

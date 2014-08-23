@@ -11,6 +11,7 @@ public class BaseMessage {
     private String msgtype;
     private String errcode;
     private String errmsg;
+    private int sendTimes;
 
     public String getTouser() {
         return touser;
@@ -42,5 +43,13 @@ public class BaseMessage {
 
     public void setErrmsg(String errmsg) {
         this.errmsg = errmsg;
+    }
+
+    public int getSendTimes() {
+        return sendTimes;
+    }
+
+    public void setSendTimes(int sendTimes) {
+        this.sendTimes = sendTimes;
     }
 }

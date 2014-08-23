@@ -11,7 +11,8 @@ import java.io.IOException;
  * Time: 下午2:51
  */
 public class MyTest {
-    String ip = "http://hrwhatjava.sinaapp.com";
+//    String ip = "http://hrwhatjava.sinaapp.com";
+    String ip = "http://127.0.0.1:8081";
     String url = ip +"/svc?signature=token&timestamp=&nonce=&echostr=echostr";
 
     @Test
@@ -94,16 +95,44 @@ public class MyTest {
 
     @Test
     public void send(){
+        String data = "[{\"uid\":2001,\"act\":1,\"time\":\"2014-08-23 17:17:17\"}]";
+        url = "http://realidtech.sinaapp.com/if";
+        long startTime = System.currentTimeMillis();
+        for (int i = 0; i < 100; i++) {
+            System.out.println(i);
+            try {
+                HttpUtil.securityPost(url, data.replace("OPEN_ID", "open_id" + i), "realid", "31415926");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        System.out.println("last time = " +(System.currentTimeMillis() - startTime));
+    }
+
+    @Test
+    public void sendLocal(){
         String data = "[{\"uid\":2001,\"act\":1,\"time\":\"2014-07-28 17:17:17\"}]";
         url = "http://127.0.0.1:8081/if";
-//        url = "http://hrwhatjava.sinaapp.com/if";
-//        url = "http://realidtech.sinaapp.com/if";
         long startTime = System.currentTimeMillis();
         for (int i = 0; i < 10; i++) {
             System.out.println(i);
             try {
-                HttpUtil.securityPost(url, data.replace("OPEN_ID", "open_id" + i), "ray", "123");
-//                HttpUtil.securityPost(url, data.replace("OPEN_ID", "open_id" + i), "realid", "31415926");
+                 HttpUtil.securityPost(url, data.replace("OPEN_ID", "open_id" + i), "ray", "123");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        System.out.println("last time = " +(System.currentTimeMillis() - startTime));
+    }
+    @Test
+    public void sendHr(){
+        String data = "[{\"uid\":2001,\"act\":1,\"time\":\"2014-07-28 17:17:17\"}]";
+        url = "http://hrwhatjava.sinaapp.com/if";
+        long startTime = System.currentTimeMillis();
+        for (int i = 0; i < 100; i++) {
+            System.out.println(i);
+            try {
+                 HttpUtil.securityPost(url, data.replace("OPEN_ID", "open_id" + i), "ray", "123");
             } catch (IOException e) {
                 e.printStackTrace();
             }

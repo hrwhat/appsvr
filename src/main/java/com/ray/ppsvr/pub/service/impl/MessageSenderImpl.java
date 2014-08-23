@@ -12,10 +12,10 @@ import com.ray.ppsvr.pub.service.AccessTokenService;
 import com.ray.ppsvr.pub.service.MessageSender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +32,9 @@ public class MessageSenderImpl implements MessageSender {
     @Resource
     private AccessTokenService accessTokenService;
 
+    @Value("${com.ray.ppsvr.resend.times}")
+    private int RESEND_TIMES;
+
     @Resource
     private PubDAO pubDAO;
 
@@ -43,7 +46,7 @@ public class MessageSenderImpl implements MessageSender {
                 tm = new TextMessage();
                 Map<String, Object> msgLog = new HashMap<String, Object>();
                 Map<String, String> student = pubDAO.queryStudentByNo(msg.get("uid").toString());
-                if(student == null){
+                if (student == null) {
                     logger.warn("学号[" + msg.get("uid").toString() + "]不存在，被忽略");
                     continue;
                 }
@@ -56,7 +59,7 @@ public class MessageSenderImpl implements MessageSender {
                     status = MessageStatus.NO_OPEN_ID.getIndex();
                 } else {
                     tm.setTouser(openId);
-                    tm.setContent("家长，您好，学生" + student.get("NAME") +"于" + msg.get("time") + getContent(msg.get("act").toString()) + "，请知悉！" );
+                    tm.setContent("家长，您好，学生" + student.get("NAME") + "于" + msg.get("time") + getContent(msg.get("act").toString()) + "，请知悉！");
                     try {
                         status = (send(tm) ? MessageStatus.SENT : MessageStatus.SEND_ERROR).getIndex();
                     } catch (Exception e) {
@@ -79,6 +82,10 @@ public class MessageSenderImpl implements MessageSender {
 
 
     public boolean send(BaseMessage message) {
+        if (message.getSendTimes() == RESEND_TIMES) {
+            return false;
+        }
+        message.setSendTimes(message.getSendTimes() + 1);
         boolean success = false;
         String accessToken = accessTokenService.getAccessToken();
         String url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=ACCESS_TOKEN";
@@ -87,7 +94,8 @@ public class MessageSenderImpl implements MessageSender {
             if (res != null) {
                 Map<String, Object> map = JsonUtil.parseMap(res);
                 String errcode = String.valueOf(map.get("errcode"));
-                if ("40014".equals(errcode)) {  //不合法的access_token ,再取一次
+                //不合法的access_token ,或者access_token超时再取一次
+                if ("40014".equals(errcode) || "42001".equals(errcode)) {
                     accessToken = accessTokenService.getAccessToken(true);
                     res = HttpUtil.post(url.replace("ACCESS_TOKEN", accessToken), message.toString());
 
@@ -104,16 +112,24 @@ public class MessageSenderImpl implements MessageSender {
                     }
                 } else if ("0".equals(errcode)) {
                     success = true;
+                } else if ("40001".equals(errcode)) {  //有另一个副本已经获取了新的ACCESS_TOKEN,需重新从数据库加载
+                    accessTokenService.reloadAccessTokenFromDB();
+                    send(message);
                 } else {
+
                     message.setErrcode(errcode);
                     message.setErrmsg(String.valueOf(map.get("errmsg")));
-                    throw new RuntimeException("调用点对点接口失败：" + map.get("errcode") + message.getErrmsg());
+                    logger.error(message.toString());
+                    logger.error(accessToken);
+                    throw new RuntimeException("重发" + message.getSendTimes() + "次后失败：" + map.get("errcode") + message.getErrmsg());
                 }
 
+
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             success = false;
             logger.error("调用点对点接口失败", e);
+            send(message);
         }
         return success;
     }

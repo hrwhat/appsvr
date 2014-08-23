@@ -10,4 +10,6 @@ public interface AccessTokenService {
     String getAccessToken(boolean forced);
 
     String getAccessToken();
+
+    public void reloadAccessTokenFromDB();
 }

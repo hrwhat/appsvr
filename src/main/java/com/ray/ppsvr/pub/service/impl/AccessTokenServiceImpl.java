@@ -80,6 +80,7 @@ public class AccessTokenServiceImpl implements AccessTokenService {
         }
         String url = this.url.replace("APPID", this.appid).replace("APPSECRET", this.appsecret);
         try {
+            logger.info("获取ACCESS_TOKEN");
             String res = HttpUtil.get(url);
             Map map = om.readValue(res,Map.class);
             if(map.get("access_token") != null) {
@@ -117,6 +118,14 @@ public class AccessTokenServiceImpl implements AccessTokenService {
 
     public String getAccessToken(){
         return getAccessToken(false);
+    }
+
+    public void reloadAccessTokenFromDB(){
+        logger.info("重新加载tb_sys_param");
+        sysParameter.loadData();
+        this.ACCESS_TOKEN = sysParameter.getWxAccessToken();
+        this.REFRESH_TIME = sysParameter.getWxAccessTokenRefreshTime();
+        this.EXPIRE_IN = sysParameter.getWxAccessTokenExpireIn();
     }
 
 }
